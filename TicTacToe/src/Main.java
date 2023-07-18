@@ -16,9 +16,10 @@ public class Main {
         boolean gameOver = false;
         Scanner scan = new Scanner(System.in);
 
-
+        //This is the main game loop.
         do {
             do {
+                //This resets the board, the starting player, and the gameOver flag.
                 if (moveCounter == 0) {
                     clearBoard();
                     showBoard();
@@ -27,13 +28,17 @@ public class Main {
                 }
                 validMove = false;
 
+                //This starts the player's move loop.
                 do {
                     System.out.println();
                     System.out.println("Player " + player + "'s Turn");
 
+                    //These 2 lines prompt the user for a input, and validates that they are within the range we want.
                     rowChoice = (SafeInput.getRangedInt(scan, "Enter a Row 1 - 3", 1, 3)) - 1;
                     colChoice = (SafeInput.getRangedInt(scan, "Enter a Column 1 - 3", 1, 3)) - 1;
 
+                    //This verifies that the move that was inputted is a valid move, and the space is empty.
+                    //If that is true, it adds it to the board, and moves the moveCounter up 1.
                     if (isValidMove(rowChoice, colChoice) == true) {
                         board[rowChoice][colChoice] = player;
                         moveCounter++;
@@ -42,6 +47,8 @@ public class Main {
                         System.out.println("Error, space already filled!");
                     }
                     ;
+
+                    //After 5 moves, the game checks to see if the player has won.
                     if (moveCounter >= 5) {
                         if (isRowWin(player) == true) {
                             System.out.println("Player " + player + " wins!");
@@ -56,7 +63,8 @@ public class Main {
                             gameOver = true;
                         }
 
-                        if (((isRowTie(player) == true || isColTie(player) == true) || (isDagTie(player) == true)) || ((moveCounter == 9) && (gameOver = false)))
+                        //We also check to see if the game is unwinnable for both players, and would end in a tie.
+                        if ((((isRowTie(player) == true || isColTie(player) == true) || (isDagTie(player) == true)) && gameOver == false) || ((moveCounter == 9) && (gameOver = false)))
                         {
                             System.out.println("Its a stalemate!");
                             gameOver = true;
@@ -66,17 +74,21 @@ public class Main {
 
                 showBoard();
 
+                //This is a toggle to switch between players after each move.
                 if (player.equals("X")) {
                     player = "O";
                 } else {
                     player = "X";
                 }
             } while (!gameOver == true);
+
+            //This prompts the user if they want to play again, and verifies they gave a Y or N answer.
             playAgain = SafeInput.getYNConfirm(scan, "Would you like to play again? Y/N");
             moveCounter = 0;
         } while (!playAgain == false);
     }
 
+    //This function clears the board of all moves.
     private static void clearBoard() {
         for (int row = 0; row < ROW; row++) {
             for (int col = 0; col < COL; col++) {
@@ -87,6 +99,7 @@ public class Main {
 
     ;
 
+    //This function shows the board of the game.
     private static void showBoard() {
         for (int row = 0; row < ROW; row++) {
             System.out.println();
@@ -100,6 +113,7 @@ public class Main {
         }
     }
 
+    //This function validates that the 2 inputs the user gave is a valid move in the game.
     private static boolean isValidMove(int row, int col) {
         if (board[row][col].equals(" ")) {
             return true;
@@ -108,6 +122,7 @@ public class Main {
         }
     }
 
+    //This checks to see if the user has a row win.
     private static boolean isRowWin(String player) {
         for (int row = 0; row < ROW; row++) {
             if (board[row][0].equals(player) && board[row][1].equals(player) && board[row][2].equals(player)) {
@@ -117,6 +132,7 @@ public class Main {
         return false;
     }
 
+    //This checks to see if the user has a column win.
     private static boolean isColWin(String player) {
         for (int col = 0; col < COL; col++) {
             if (board[0][col].equals(player) && board[1][col].equals(player) && board[2][col].equals(player)) {
@@ -126,6 +142,7 @@ public class Main {
         return false;
     }
 
+    //This checks to see if the user has a diagonal win.
     private static boolean isDiagonalWin(String player) {
         if (board[0][0].equals(player) && board[1][1].equals(player) && board[2][2].equals(player)) {
             return true;
@@ -135,6 +152,7 @@ public class Main {
         return false;
     }
 
+    //This checks to see if there is a tie in all of the rows between the players.
     private static boolean isRowTie(String player) {
         int rowCount = 0;
 
@@ -159,6 +177,7 @@ public class Main {
         return false;
     }
 
+    //This checks to see if all the columns are in a stalemate between the 2 players.
     private static boolean isColTie(String player) {
         int colCount = 0;
         String opponent = "";
@@ -179,7 +198,7 @@ public class Main {
         }
         return false;
     }
-
+    //This checks to see if there is a tie in the diagonals.
     private static boolean isDagTie(String player) {
         int dagCount = 0;
 
